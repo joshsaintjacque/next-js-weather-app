@@ -121,7 +121,6 @@ const Home = ({temp, conditions, isDaytime}) => {
         }
 
         .card {
-          height: 125px;
           margin: 1rem;
           flex-basis: 45%;
           padding: 1.5rem;
