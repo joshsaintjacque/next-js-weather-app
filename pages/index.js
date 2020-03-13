@@ -202,6 +202,7 @@ export async function getServerSideProps(context) {
   if(!city || city.length === 0) return {props: {}};
   const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=imperial`);
   const data = await response.json();
+  console.log("if -> data", data)
   const sunriseTime = new Date(data.sys.sunrise * 1000);
   const sunsetTime = new Date(data.sys.sunset * 1000);
   const currentTime = new Date();
