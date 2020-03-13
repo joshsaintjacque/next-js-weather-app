@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Router from 'next/router';
 import fetch from 'isomorphic-unfetch';
 
-const Home = ({temp, conditions, isDaytime}) => {
+const Home = ({temp, conditions, isDaytime, code}) => {
   const [city, setCity] = useState('');
 
   const onChange = (event) => {
@@ -30,9 +30,11 @@ const Home = ({temp, conditions, isDaytime}) => {
         </h1>
 
         <p className="description">
-          <input placeholder="City name" onChange={onChange} className="city-name"></input>
+          <input placeholder="City name (e.g., Seattle)" onChange={onChange} className="city-name"></input>
           <button onClick={onClick} className="search-button">Search</button>
         </p>
+
+        {code === '404' && <h2>City not found</h2>}
 
         {city && temp && <div className="grid">
           <div className="card">
@@ -201,15 +203,16 @@ export async function getServerSideProps(context) {
   if(!city || city.length === 0) return {props: {}};
   const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=imperial`);
   const data = await response.json();
-  const sunriseTime = new Date(data.sys.sunrise * 1000);
-  const sunsetTime = new Date(data.sys.sunset * 1000);
+  const sunriseTime = new Date(data.sys?.sunrise * 1000);
+  const sunsetTime = new Date(data.sys?.sunset * 1000);
   const currentTime = new Date();
   const isDaytime = currentTime > sunriseTime && currentTime < sunsetTime;
 
   return {
     props: {
-      temp: data.main.temp,
-      conditions: data.weather,
+      temp: data.main?.temp || '',
+      conditions: data.weather || [],
+      code: data.cod,
       isDaytime,
     }
   }
