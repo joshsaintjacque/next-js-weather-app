@@ -197,7 +197,7 @@ const Home = ({temp, conditions, isDaytime}) => {
 
 
 export async function getServerSideProps(context) {
-  const key = process.env.OPEN_WEATHER_KEY;
+  const key = process.env.open_weather_key;
   const { city } = context.query;
   if(!city || city.length === 0) return {props: {}};
   const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}&units=imperial`);
